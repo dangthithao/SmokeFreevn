@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SmokeFree VN — Thông tin & hỗ trợ bỏ thuốc</title>
+  <meta name="description" content="Website cung cấp kiến thức, công cụ tính chi phí hút thuốc, kế hoạch bỏ thuốc và tài nguyên hỗ trợ." />
+  <style>
+    :root{
+      --bg:#0f172a;          /* nền xanh đen */
+      --panel:#111827;       /* panel đậm */
+      --muted:#94a3b8;       /* chữ phụ */
+      --text:#e5e7eb;        /* chữ chính */
+      --brand:#22c55e;       /* điểm nhấn xanh lá (sức khỏe) */
+      --accent:#38bdf8;      /* điểm nhấn xanh lam */
+      --warn:#f59e0b;        /* điểm nhấn vàng */
+      --danger:#ef4444;      /* điểm nhấn đỏ */
+      --card:#0b1220;        /* thẻ */
+      --radius:14px;
+      --shadow:0 10px 30px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+      background: radial-gradient(1200px 600px at 10% -10%, #0b1530 0%, #0f172a 40%, #0a0f1f 100%);
+      color:var(--text); line-height:1.6;
+    }
+    a{color:var(--accent); text-decoration:none}
+    a:hover{text-decoration:underline}
+    /* Header */
+    .nav{
+      position:sticky; top:0; z-index:50; backdrop-filter:saturate(150%) blur(10px);
+      background:rgba(10,15,31,.6); border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .nav .wrap{
+      max-width:1100px; margin:0 auto; padding:12px 20px; display:flex; align-items:center; gap:16px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.3px;
+    }
+    .logo{
+      width:34px; height:34px; border-radius:10px; background:
+        conic-gradient(from 210deg, #22c55e, #38bdf8, #22c55e);
+      box-shadow:0 8px 22px rgba(56,189,248,.35);
+    }
+    .nav ul{list-style:none; margin:0 0 0 auto; padding:0; display:flex; gap:18px; flex-wrap:wrap}
+    .nav a{color:var(--text); opacity:.9}
+    .nav a:hover{opacity:1}
+    /* Hero */
+    .hero{
+      max-width:1100px; margin:0 auto; padding:64px 20px 28px;
+      display:grid; grid-template-columns:1.2fr 1fr; gap:28px; align-items:center;
+    }
+    .badge{display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; background:rgba(34,197,94,.12); color:#b7f7cc; font-weight:600; font-size:13px}
+    h1{font-size:clamp(28px,4vw,44px); line-height:1.15; margin:10px 0 14px}
+    .lead{color:var(--muted); font-size:16px; max-width:60ch}
+    .cta{display:flex; gap:12px; margin-top:20px; flex-wrap:wrap}
+    .btn{
+      display:inline-flex; align-items:center; gap:10px; padding:12px 16px; border-radius:12px; border:1px solid rgba(255,255,255,.08);
+      background:linear-gradient(180deg, rgba(34,197,94,.18), rgba(34,197,94,.08)); color:#d9ffe7; font-weight:700; box-shadow:var(--shadow);
+    }
+    .btn.secondary{background:linear-gradient(180deg, rgba(56,189,248,.18), rgba(56,189,248,.08)); color:#e6f7ff}
+    .illus{
+      background:linear-gradient(160deg, rgba(56,189,248,.12), rgba(34,197,94,.12));
+      border:1px solid rgba(255,255,255,.06); border-radius:var(--radius); padding:24px;
+      box-shadow:var(--shadow);
+    }
+    .illus .grid{
+      display:grid; grid-template-columns:repeat(2,1fr); gap:12px;
+    }
+    .card{
+      background:var(--card); border:1px solid rgba(255,255,255,.06); border-radius:12px; padding:14px;
+    }
+    .kpi{font-size:24px; font-weight:800}
+    .muted{color:var(--muted)}
+    /* Sections */
+    section{max-width:1100px; margin:0 auto; padding:28px 20px 10px}
+    .section-title{font-size:22px; margin:12px 0 10px}
+    .grid{display:grid; gap:16px}
+    .cols-3{grid-template-columns:repeat(3,1fr)}
+    .cols-2{grid-template-columns:repeat(2,1fr)}
+    @media (max-width: 880px){
+      .hero{grid-template-columns:1fr}
+      .cols-3,.cols-2{grid-template-columns:1fr}
+    }
+    /* Calculator */
+    .calc{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+    .calc .panel{background:var(--panel); border:1px solid rgba(255,255,255,.06); border-radius:12px; padding:16px}
+    .input{display:flex; flex-direction:column; gap:6px}
+    .input input{
+      background:#0a1222; color:var(--text); border:1px solid rgba(255,255,255,.08);
+      padding:10px 12px; border-radius:10px; outline:none;
+    }
+    .pill{display:inline-block; font-size:12px; color:var(--muted); border:1px solid rgba(255,255,255,.08); padding:2px 8px; border-radius:999px}
+    .result .row{display:flex; justify-content:space-between; border-bottom:1px dashed rgba(255,255,255,.08); padding:8px 0}
+    .result .row:last-child{border-bottom:none}
+    /* Timeline */
+    .timeline{display:grid; gap:10px}
+    .step{
+      display:grid; grid-template-columns:120px 1fr; gap:14px; align-items:start; background:var(--panel);
+      border:1px solid rgba(255,255,255,.06); border-radius:12px; padding:12px;
+    }
+    .step .when{font-weight:800; color:#c7f5d8}
+    /* Accordion */
+    .faq{display:grid; gap:10px}
+    .qa{background:var(--panel); border:1px solid rgba(255,255,255,.06); border-radius:12px}
+    .qa summary{
+      cursor:pointer; list-style:none; padding:14px 16px; font-weight:700;
+    }
+    .qa summary::-webkit-details-marker{display:none}
+    .qa .a{padding:0 16px 16px; color:var(--muted)}
+    /* Footer */
+    footer{padding:30px 20px 60px; text-align:center; color:var(--muted)}
+    .chips{display:flex; gap:8px; flex-wrap:wrap; justify-content:center}
+    .chip{background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08); padding:6px 10px; border-radius:999px; font-size:12px}
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="wrap">
+      <div class="brand"><div class="logo" aria-hidden="true"></div> SmokeFree VN</div>
+      <ul>
+        <li><a href="#lydo">Lý do</a></li>
+        <li><a href="#calc">Chi phí</a></li>
+        <li><a href="#loiich">Lợi ích</a></li>
+        <li><a href="#kehoach">Kế hoạch</a></li>
+        <li><a href="#tainguyen">Tài nguyên</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div>
+      <span class="badge">Vì sức khỏe — Vì gia đình — Vì tương lai</span>
+      <h1>Bỏ thuốc không hề đơn độc. Bắt đầu từng bước, ngay hôm nay.</h1>
+      <p class="lead">Trang này cung cấp kiến thức dễ hiểu, công cụ tính chi phí, lộ trình lợi ích theo thời gian và kế hoạch 4 bước để bạn (hoặc người thân) dừng hút thuốc an toàn, bền vững.</p>
+      <div class="cta">
+        <a class="btn" href="#kehoach">Bắt đầu kế hoạch bỏ thuốc</a>
+        <a class="btn secondary" href="#calc">Tính chi phí đang chi</a>
+      </div>
+    </div>
+    <div class="illus">
+      <div class="grid">
+        <div class="card">
+          <div class="kpi" id="kpi-year">—</div>
+          <div class="muted">Chi phí/năm (ước tính)</div>
+        </div>
+        <div class="card">
+          <div class="kpi" id="kpi-month">—</div>
+          <div class="muted">Chi phí/tháng (ước tính)</div>
+        </div>
+        <div class="card">
+          <div class="kpi">+ Sức khỏe</div>
+          <div class="muted">Giảm nguy cơ bệnh tim, đột quỵ, ung thư phổi.</div>
+        </div>
+        <div class="card">
+          <div class="kpi">+ Tự do</div>
+          <div class="muted">Ít lệ thuộc nicotine, chủ động thời gian & tài chính.</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section id="lydo">
+    <h2 class="section-title">Vì sao nên bỏ thuốc?</h2>
+    <div class="grid cols-3">
+      <div class="card">
+        <strong>Sức khỏe:</strong>
+        <p class="muted">Bỏ thuốc giúp phổi, tim mạch và hệ miễn dịch cải thiện theo tuần–tháng. Bạn thở dễ hơn, vận động tốt hơn.</p>
+      </div>
+      <div class="card">
+        <strong>Tài chính:</strong>
+        <p class="muted">Cắt giảm chi tiêu lớn hằng tháng. Khoản tiết kiệm này có thể dành cho gia đình, học tập, du lịch.</p>
+      </div>
+      <div class="card">
+        <strong>Gia đình & cộng đồng:</strong>
+        <p class="muted">Giảm tác hại khói thuốc thụ động cho người thân, trẻ nhỏ và đồng nghiệp.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="calc">
+    <h2 class="section-title">Máy tính chi phí hút thuốc</h2>
+    <div class="calc">
+      <div class="panel">
+        <div class="input">
+          <label for="cigs">Điếu/ngày</label>
+          <input id="cigs" type="number" min="0" step="1" placeholder="Ví dụ: 15" />
+        </div>
+        <div class="input">
+          <label for="price">Giá/bao (VND)</label>
+          <input id="price" type="number" min="0" step="100" placeholder="Ví dụ: 25000" />
+        </div>
+        <div class="input">
+          <label for="perpack">Điếu/bao <span class="pill">Mặc định: 20</span></label>
+          <input id="perpack" type="number" min="1" step="1" value="20" />
+        </div>
+        <div class="input">
+          <label for="months">Tính tiết kiệm nếu bỏ trong (tháng)</label>
+          <input id="months" type="number" min="1" step="1" value="12" />
+        </div>
+      </div>
+      <div class="panel result">
+        <div class="row"><span>Chi phí/ngày</span><strong id="r-day">—</strong></div>
+        <div class="row"><span>Chi phí/tháng (30 ngày)</span><strong id="r-month">—</strong></div>
+        <div class="row"><span>Chi phí/năm (365 ngày)</span><strong id="r-year">—</strong></div>
+        <div class="row"><span>Tiết kiệm nếu bỏ trong <span id="label-months">12</span> tháng</span><strong id="r-save">—</strong></div>
+        <p class="muted" style="margin-top:10px">Ước tính đơn giản để bạn hình dung quy mô chi tiêu. Thay số phù hợp thực tế của bạn.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="loiich">
+    <h2 class="section-title">Lợi ích theo thời gian</h2>
+    <div class="timeline">
+      <div class="step">
+        <div class="when">20 phút</div>
+        <div>Huyết áp và nhịp tim bắt đầu trở về mức bình thường.</div>
+      </div>
+      <div class="step">
+        <div class="when">24 giờ</div>
+        <div>Nguy cơ nhồi máu cơ tim giảm; khí CO trong máu hạ, oxy tăng.</div>
+      </div>
+      <div class="step">
+        <div class="when">2–12 tuần</div>
+        <div>Tuần hoàn máu cải thiện, chức năng phổi tăng; hoạt động thể lực dễ hơn.</div>
+      </div>
+      <div class="step">
+        <div class="when">1–9 tháng</div>
+        <div>Ho và khó thở giảm; lông chuyển trong phổi phục hồi, dọn sạch chất nhầy tốt hơn.</div>
+      </div>
+      <div class="step">
+        <div class="when">1 năm</div>
+        <div>Nguy cơ bệnh mạch vành giảm đáng kể so với khi còn hút.</div>
+      </div>
+      <div class="step">
+        <div class="when">5 năm+</div>
+        <div>Nguy cơ đột quỵ và một số ung thư tiếp tục giảm theo thời gian không hút thuốc.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="kehoach">
+    <h2 class="section-title">Kế hoạch 4 bước để bỏ thuốc</h2>
+    <div class="grid cols-2">
+      <div class="card">
+        <strong>B1 — Đặt ngày bỏ cụ thể:</strong>
+        <p class="muted">Chọn một ngày trong 2–3 tuần tới. Ghi lại lý do cá nhân để nhắc mình kiên định.</p>
+      </div>
+      <div class="card">
+        <strong>B2 — Gỡ “bẫy” kích hoạt:</strong>
+        <p class="muted">Dọn bật lửa, gạt tàn; tránh “điếu sau bữa ăn” trong 2–3 tuần đầu; thay bằng đi bộ ngắn, nhai kẹo không đường.</p>
+      </div>
+      <div class="card">
+        <strong>B3 — Chiến lược thèm thuốc:</strong>
+        <p class="muted">Quy tắc 5 phút; uống nước; hít thở sâu 10 lần; nhắn bạn thân “đang thèm, giúp mình qua cơn”.</p>
+      </div>
+      <div class="card">
+        <strong>B4 — Nhờ hỗ trợ chuyên môn:</strong>
+        <p class="muted">Trao đổi bác sĩ về liệu pháp thay thế nicotine hoặc thuốc hỗ trợ; tham gia nhóm hỗ trợ bỏ thuốc.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="tainguyen">
+    <h2 class="section-title">Tài nguyên & công cụ hữu ích</h2>
+    <div class="grid cols-3">
+      <div class="card">
+        <strong>Danh sách kiểm “Ngày đầu”:</strong>
+        <ul class="muted">
+          <li>Thông báo với gia đình, đồng nghiệp.</li>
+          <li>Chuẩn bị kẹo cao su, nước lọc, lộ trình đi bộ.</li>
+          <li>Gỡ thuốc khỏi nơi dễ thấy; đổi thói quen cà phê sáng.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <strong>Ứng dụng theo dõi:</strong>
+        <p class="muted">Tìm app “quit smoking” trên điện thoại để đếm ngày, theo dõi cơn thèm, kỷ niệm mốc không thuốc.</p>
+      </div>
+      <div class="card">
+        <strong>Hỗ trợ y tế:</strong>
+        <p class="muted">Nếu có bệnh nền hoặc đang mang thai, hãy trao đổi bác sĩ để chọn phương án bỏ thuốc an toàn.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <h2 class="section-title">Câu hỏi thường gặp</h2>
+    <div class="faq">
+      <details class="qa">
+        <summary>Vaping có thay thế an toàn cho thuốc lá không?</summary>
+        <div class="a">Vaping vẫn mang rủi ro sức khỏe và có thể duy trì lệ thuộc nicotine. Nếu đang hút, trao đổi bác sĩ về phương án đã được khuyến nghị và đặt mục tiêu không dùng nicotine lâu dài.</div>
+      </details>
+      <details class="qa">
+        <summary>Tăng cân sau khi bỏ thuốc có bình thường?</summary>
+        <div class="a">Một số người tăng nhẹ do ăn vặt thay thói quen hút. Hãy chuẩn bị đồ ăn lành mạnh, uống nước, đi bộ ngắn; ưu tiên bỏ thuốc trước, cân nặng điều chỉnh dần với lối sống lành mạnh.</div>
+      </details>
+      <details class="qa">
+        <summary>Trượt một điếu có “hỏng hết” không?</summary>
+        <div class="a">Không. Hãy học từ tình huống đó (triggers gì), điều chỉnh kế hoạch và tiếp tục. Tính nhất quán quan trọng hơn sự hoàn hảo.</div>
+      </details>
+    </div>
+  </section>
+
+  <footer>
+    <div class="chips">
+      <span class="chip">#health</span>
+      <span class="chip">#smokefree</span>
+      <span class="chip">#family</span>
+      <span class="chip">#finance</span>
+    </div>
+    <p style="margin-top:10px">Thông tin chỉ mang tính giáo dục và hỗ trợ. Hãy tham khảo chuyên gia y tế cho lời khuyên cá nhân hóa.</p>
+  </footer>
+
+  <script>
+    function fmtVND(n){
+      if(!isFinite(n)) return "—";
+      try { return n.toLocaleString('vi-VN', {style:'currency', currency:'VND', maximumFractionDigits:0}); }
+      catch(e){ return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")+" ₫"; }
+    }
+    function calc(){
+      const cigs = parseFloat(document.getElementById('cigs').value || 0);
+      const price = parseFloat(document.getElementById('price').value || 0);
+      const perpack = parseFloat(document.getElementById('perpack').value || 20);
+      const months = parseFloat(document.getElementById('months').value || 12);
+      const dayCost = perpack>0 ? (cigs / perpack) * price : 0;
+      const monthCost = dayCost * 30;
+      const yearCost = dayCost * 365;
+      document.getElementById('r-day').textContent = fmtVND(dayCost);
+      document.getElementById('r-month').textContent = fmtVND(monthCost);
+      document.getElementById('r-year').textContent = fmtVND(yearCost);
+      document.getElementById('r-save').textContent = fmtVND(monthCost * months);
+      document.getElementById('label-months').textContent = isFinite(months) ? months : '—';
+      // KPIs trên hero
+      document.getElementById('kpi-year').textContent = fmtVND(yearCost);
+      document.getElementById('kpi-month').textContent = fmtVND(monthCost);
+    }
+    ['cigs','price','perpack','months'].forEach(id=>{
+      document.getElementById(id).addEventListener('input', calc);
+    });
+    // Khởi tạo ví dụ nhẹ để người dùng thấy thay đổi
+    document.getElementById('cigs').value = 10;
+    document.getElementById('price').value = 25000;
+    calc();
+  </script>
+</body>
+</html>
+
